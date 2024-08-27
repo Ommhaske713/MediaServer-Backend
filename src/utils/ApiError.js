@@ -18,6 +18,6 @@ class ApiError extends Error{
             Error.captureStackTrace(this,this.constructor)
         }
     }
-   // more than one onj
+   // more than one object
 }
 export {ApiError};
