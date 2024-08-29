@@ -1,4 +1,5 @@
-const asyncHandler = (requestHandler) =>{(req,res,next) =>{
+const asyncHandler = (requestHandler) =>{
+    return (req,res,next) =>{
     Promise.resolve(requestHandler(req,res,next)).catch((error) => next(error))      //If the promise fails (an error happens), it catches the error and passes it to next(error), which sends the error to Express’s error-handling middleware.
 
 }}
