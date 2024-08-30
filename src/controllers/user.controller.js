@@ -1,5 +1,6 @@
 import {asyncHandler} from "../utils/asyncHandler.js";
-
+import { ApiError } from "../utils/ApiError.js";
+import { User } from "../models/user.model.js";
 
 const registerUser = asyncHandler(async (req,res) =>{
    // get user details from the frontend 
@@ -10,6 +11,41 @@ const registerUser = asyncHandler(async (req,res) =>{
    // create a user object -create entry in db
    // remove the password and remove the token field from response 
    //return res
+
+   const {fullName,email,username,password} = req.body
+   console.log(email)
+   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+   if (fullName === "") {
+      throw new ApiError(400,"fullName is required")
+   }
+   else if (email === "" || !emailRegex.test(email)) {
+      throw new ApiError(400, "A valid email is required");
+   }
+   else if(username === ""){
+      throw new ApiError(400,"username is required")
+   }
+   else if(password === ""){
+      throw new ApiError(400,"password is required")
+   }
+   
+   const existedUser = User.findOne({
+      $or: [{ email },{ username }]
+   })
+
+   if (existedUser) {
+      throw new ApiError(409,"Users with email or username already exists")
+   }
+
+   res.status(200).json({message:"All good, user can be registered "});
+   
+   // if (
+   //    [username,email,password,fullName].some((field)=>field?.trim() ==="")
+   // ) {
+   //    throw new ApiError(400,"All fields are required")
+   // }
+   
 });
+
 
 export {registerUser};
