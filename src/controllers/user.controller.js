@@ -30,7 +30,7 @@ const registerUser = asyncHandler(async (req,res) =>{
       throw new ApiError(400,"password is required");
    }
    
-   const existedUser = User.findOne({
+   const existedUser = await User.findOne({
       $or: [{ email },{ username }]
    })
 
@@ -58,7 +58,7 @@ const registerUser = asyncHandler(async (req,res) =>{
       coverImage :coverImage?.url || "",
       email,
       password,
-      username:username.toLoweCase(),
+      username:username.toLowerCase()
 
    })
    const userCreated = await User.findById(user._id).select(
