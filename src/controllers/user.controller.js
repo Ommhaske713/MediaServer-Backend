@@ -21,8 +21,6 @@ const generateAccessAndRefreshTokens = async (userId) => {
    }
 }
 
-
-
 const registerUser = asyncHandler(async (req,res) =>{
    // get user details from the frontend 
    // check for validation -no empty field 
@@ -127,6 +125,21 @@ const loginUser = asyncHandler(async (req,res) => {
    }
 
    const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id);
+
+   const loggedInUser = await User.findById(user._id).select("-password refreshToken");
+
+   const option = {
+      httpOnly:true,
+      secure:true
+   }
+
+   return res
+   .status(200)
+   .cookie("accessToken", accessToken , option)
+   .cookie("refreshToken", refreshToken , option)
+   .json(
+      new ApiResponse(200,{user :loggedInUser,accessToken,refreshToken}," User logged in successfully ")
+   )
 });
 
 export {registerUser,loginUser};
