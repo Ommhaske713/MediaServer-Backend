@@ -121,12 +121,12 @@ const loginUser = asyncHandler(async (req,res) => {
 
    const isPasswordValid = await user.isPasswordCorrect(password);
    if (!isPasswordValid) {
-     throw new ApiError(401,"invalid  password");
+     throw new ApiError(401,"invalid  password ");
    }
 
    const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id);
 
-   const loggedInUser = await User.findById(user._id).select("-password refreshToken");
+   const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
    const options = {
       httpOnly:true,
@@ -146,9 +146,9 @@ const logoutUser = asyncHandler(async (req,res) => {
    await User.findByIdAndUpdate(
       req.user._id,
       {
-         $set:{
-            refreshToken
-         },
+         $unset:{
+            refreshToken:1
+         }
          
       },
       {
