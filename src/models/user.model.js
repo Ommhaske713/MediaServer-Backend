@@ -8,7 +8,7 @@ const userSchema =new mongoose.Schema({
         required:true,
         unique:true,
         lowercase:true,
-        trim:true,   // The trim option automatically removes any extra spaces from the beginning and end of the username string.
+        trim:true,  
         index:true   // use for optimising the search field 
 
     },
